@@ -10,4 +10,4 @@ Numpy >= 1.15.1
 
 Install torchdiffeq from https://github.com/rtqichen/torchdiffeq.
 
-Plants distribution:
+Power stations distribution of Dadu River:
