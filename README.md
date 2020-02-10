@@ -11,3 +11,4 @@ Numpy >= 1.15.1
 Install torchdiffeq from https://github.com/rtqichen/torchdiffeq.
 
 Power stations distribution of Dadu River:
+![image](https://github.com/Anewnoob/DeepHydro/tree/master/pic/Data/power-distribution.pdf)
