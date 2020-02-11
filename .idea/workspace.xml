@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d385d090-1ef0-4178-a9b5-22b617de8757" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/model/DeepHydro.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/DeepHydro.py" afterDir="false" />
-    </list>
+    <list default="true" id="d385d090-1ef0-4178-a9b5-22b617de8757" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,8 +90,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model/DeepHydro.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="225" column="32" selection-start-line="225" selection-start-column="32" selection-end-line="225" selection-end-column="32" />
+            <state relative-caret-position="-119">
+              <caret line="211" column="56" lean-forward="true" selection-start-line="211" selection-start-column="56" selection-end-line="211" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -112,7 +110,11 @@
       <find>self.fcn_3</find>
       <find>LatentODE</find>
       <find>run_rnn</find>
+      <find>CL-RNN</find>
     </findStrings>
+    <replaceStrings>
+      <replace>CL_RNN</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -510,8 +512,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model/DeepHydro.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="225" column="32" selection-start-line="225" selection-start-column="32" selection-end-line="225" selection-end-column="32" />
+        <state relative-caret-position="-119">
+          <caret line="211" column="56" lean-forward="true" selection-start-line="211" selection-start-column="56" selection-end-line="211" selection-end-column="56" />
         </state>
       </provider>
     </entry>
