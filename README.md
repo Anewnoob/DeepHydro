@@ -12,4 +12,4 @@ Install torchdiffeq from https://github.com/rtqichen/torchdiffeq.
 
 # Visualization
 Power stations distribution of Dadu River:
-![image](https://github.com/Anewnoob/DeepHydro/tree/master/png/power-distribution/power-distribution-1.png)
+![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/power-distribution/power-distribution-1.png)
