@@ -1,5 +1,6 @@
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
 # DeepHydro
-code for "Forecasting the Evolution of Hydropower Generation"
+Code for "Forecasting the Evolution of Hydropower Generation"
 
 # Prerequisites
 Python >= 3.6
