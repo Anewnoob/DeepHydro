@@ -25,3 +25,6 @@ We use two different types datasets, namely DGS(large-scale, 1/1/2017--31/12/201
 # Prediction
 To better observe the visualization of predcition, we randomly select the data of one week on DGS dataset and plot the predicted results of DeepHydro and ground truth for comparison:
 <div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/GT-1-week-dgs/GT-1-week-dgs-1.png" width="700" height="400" /></div>
+
+# Model training
+The following examples are conducted on dataset DGS P1:
