@@ -63,7 +63,8 @@ class GRU_unit(nn.Module):
         new_y_std = new_y_std.abs()
         return new_y, new_y_std
 
-def run_rnn(self,inputs, cell,z_cell,ode_solver,ode_solver1,first_hidden=None):
+#CL_RNN
+def CL_RNN(self,inputs, cell,z_cell,ode_solver,ode_solver1,first_hidden=None):
     batch_size, n_steps, n_dims = inputs.size()
     if n_steps == 0:
         n_steps = n_steps
@@ -160,7 +161,7 @@ class DeepHydro(nn.Module):
             print("------using historical water flow------")
             self.gru_input_dim += 3
 
-        #CL-RNN cell
+        #CL_RNN cell
         self.rnn_cell = GRU_unit(self.gru_hidden_dim_1, self.gru_input_dim, n_units = 128).cuda()
         self.z_cell = GRU_unit(50, 128, n_units = 100).cuda()
 
@@ -168,11 +169,14 @@ class DeepHydro(nn.Module):
         self.rnn = nn.GRU(self.gru_hidden_dim_1+self.z0_hidden, self.gru_hidden_dim_1, batch_first=True,
                           bidirectional=True, dropout=0.5)
 
+        #ODE used in decoder
         ode_blocks1 = []
         for _ in range(self.num_ode_blocks):
             ode_blocks1.append(ODEBlock(ODEfunc(self.z0_hidden),method='dopri5',rtol=1e-5,atol=1e-5))
         self.decoder = nn.Sequential(*ode_blocks1)
 
+
+        #ODE used in CL_RNN
         ode_blocks2 = []
         for _ in range(self.num_ode_blocks):
             ode_blocks2.append(ODEBlock(ODEfunc(self.z0_hidden,fn = nn.Tanh()),
@@ -284,7 +288,7 @@ class DeepHydro(nn.Module):
             s_inp = torch.cat([s_inp,flow_x], dim =2)
 
         batch_size, hours_length, n_dims = s_inp.size()
-        h3,all_h_hidden,z_hidden,all_z_hidden,kl_all,all_mean,all_std = run_rnn(self,s_inp,self.rnn_cell,self.z_cell,self.z_mean_ode,self.z_std_ode)
+        h3,all_h_hidden,z_hidden,all_z_hidden,kl_all,all_mean,all_std = CL_RNN(self,s_inp,self.rnn_cell,self.z_cell,self.z_mean_ode,self.z_std_ode)
         rnn_input = torch.cat([all_h_hidden,all_z_hidden],dim=2)  #[128,178]
 
         #concatenate [Z,H]
