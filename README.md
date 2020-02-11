@@ -15,7 +15,7 @@ Power stations distribution of Dadu River:
 ![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/power-distribution/power-distribution-1.png)
 
 Continuous latent representation learned in CL-RNN:
-![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/CL-RNN/4th-1.png(https://github.com/Anewnoob/DeepHydro/blob/master/png/CL-RNN/16th-1.png)![image]
+![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/CL-RNN/4th-1.png)(![image]
 
 
 # Dateset
