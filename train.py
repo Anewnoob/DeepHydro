@@ -35,7 +35,7 @@ parser.add_argument('--T', type=int, default=24)
 parser.add_argument('--len_test', type=int, default=24*7*11)
 parser.add_argument('--ext', type=bool, default=True)
 parser.add_argument('--harved_epoch', type=int, default=30)
-parser.add_argument('--dataset', type=str, default='PDS_PD',choices=["DGS_DG","PDS_PD"],help='which dataset to use')
+parser.add_argument('--dataset', type=str, default='PDS',choices=["DGS","PDS"],help='which dataset to use')
 parser.add_argument('--sample_interval', type=int, default=60,help='interval between validation')
 opt = parser.parse_args()
 
@@ -62,7 +62,7 @@ rmses = [np.inf]
 maes = [np.inf]
 
 # Load Data
-preprocess_file = DATAPATH+ f'/data/PDS_{opt.target_year}_data.pkl'
+preprocess_file = DATAPATH+ f'/data/{opt.dataset}_{opt.target_year}_data.pkl'
 print(preprocess_file)
 # DGS_data = {"data": DGS_DG_norm, "LL_data": DGS_flow_norm, "temp_prices": TP, "date": DGS_DG_T,
 #             "E_min": mmn._min, "E_max": mmn._max, "LL_min": ll_mmn._min, "LL_max": ll_mmn._max}
