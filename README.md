@@ -10,9 +10,11 @@ Numpy >= 1.15.1
 
 Install torchdiffeq from https://github.com/rtqichen/torchdiffeq.
 
-# Dateset
-We use two different types datasets, namely DGS(large-scale, 1/1/2017--31/12/2018) and PDS(small-scale, 1/1/2017--31/12/2018), to demonstrate DeepHydro performs the best against other baselines. The data of last 11 weeks (77 days) of the year are used for testing, and the rest for training. The more detailed descriptions can be obtained in the paper. 
-
 # Visualization
 Power stations distribution of Dadu River:
 ![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/power-distribution/power-distribution-1.png)
+
+
+
+# Dateset
+We use two different types datasets, namely DGS(large-scale, 1/1/2017--31/12/2018) and PDS(small-scale, 1/1/2017--31/12/2018), to demonstrate DeepHydro performs the best against other baselines. The data of last 11 weeks (77 days) of the year are used for testing, and the rest for training. The more detailed descriptions can be obtained in the paper. 
