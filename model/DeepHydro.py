@@ -102,7 +102,7 @@ def run_rnn(self,inputs, cell,z_cell,ode_solver,ode_solver1,first_hidden=None):
         all_mean.append(z)
         all_std.append(z_std)
 
-
+    #CNF is implemented by https://github.com/rtqichen/ffjord
     if self.CNF:
         # CNF
         z0 = reparameterize(z, z_std)
