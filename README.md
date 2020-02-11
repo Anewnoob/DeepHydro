@@ -11,10 +11,10 @@ Numpy >= 1.15.1
 Install torchdiffeq from https://github.com/rtqichen/torchdiffeq.
 
 # Visualization
-Continuous latent representation learned in CL-RNN:
+The distributions of latent representation along with the process of learning temporal dependencies in our CL-RNN model:
 <div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/CLRNN.jpg" width="700" height="240" /></div>
 
-The process of transforming latent representation **z** with continuous normalizing flow
+The process of transforming latent representation via continuous normalizing flow:
 <div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/cnf.jpg" width="700" height="400" /></div>
 
 
