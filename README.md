@@ -24,6 +24,5 @@ Power stations distribution of Dadu River:
 ![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/power-distribution/power-distribution-1.png)
 
 # Prediction
-To better observe the visualization of predcition, we plot the results of DeepHydro and ground truth for comparison:
+To better observe the visualization of predcition, we randomly select the data of one week on DGS dataset and plot the predicted results of DeepHydro and ground truth for comparison:
 ![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/GT-1-week-dgs/GT-1-week-dgs-1.png)
-![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/GT-1-week-pds/GT-1-week-pds-1.png)
