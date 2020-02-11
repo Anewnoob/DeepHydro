@@ -29,16 +29,16 @@ To better observe the visualization of predcition, we randomly select the data o
 # Experiments on different datasets
 * Experiment on dataset DGS-P1:
 
-  python train.py --batch_size 128 --lr 1e-4 --target_year 2017 --model "DeepHydro" --dataset "DGS"
+  python train.py --batch_size 128 --lr 1e-4 --ext True --target_year 2017 --model "DeepHydro" --dataset "DGS"
 
 * Experiment on dataset DGS-P2:
 
-  python train.py --batch_size 128 --lr 1e-4 --target_year 2018 --model "DeepHydro" --dataset "DGS"
+  python train.py --batch_size 128 --lr 1e-4 --ext True --target_year 2018 --model "DeepHydro" --dataset "DGS"
 
 * Experiment on dataset PDS-P1:
 
-  python train.py --batch_size 128 --lr 1e-4 --target_year 2017 --model "DeepHydro" --dataset "PDS"
+  python train.py --batch_size 128 --lr 1e-4 --ext True --target_year 2017 --model "DeepHydro" --dataset "PDS"
 
 * Experiment on dataset PDS-P2:
 
-  python train.py --batch_size 128 --lr 1e-4 --target_year 2018 --model "DeepHydro" --dataset "PDS"
+  python train.py --batch_size 128 --lr 1e-4 --ext True --target_year 2018 --model "DeepHydro" --dataset "PDS"
