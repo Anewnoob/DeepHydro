@@ -16,7 +16,7 @@ Power stations distribution of Dadu River:
 
 Continuous latent representation learned in CL-RNN:
 ![image](https://github.com/Anewnoob/DeepHydro/blob/master/png/CLRNN.jpg)
-<div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/CLRNN.jpg" width="1000" height="450" /></div>
+<div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/CLRNN.jpg" width="900" height="300" /></div>
 
  the process of transforming $\mathbf{z}$
 
