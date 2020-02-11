@@ -27,5 +27,5 @@ To better observe the visualization of predcition, we randomly select the data o
 <div align=center><img src="https://github.com/Anewnoob/DeepHydro/blob/master/png/GT-1-week-dgs/GT-1-week-dgs-1.png" width="700" height="400" /></div>
 
 # Experiments on different datasets
-## Experiment on dataset DGS-P1:
-### python train.py --batch_size 128 --lr 1e-4 --target_year 2017 --model "DeepHydro" --dataset "DGS_DG"
+###### Experiment on dataset DGS-P1:
+python train.py --batch_size 128 --lr 1e-4 --target_year 2017 --model "DeepHydro" --dataset "DGS_DG"
