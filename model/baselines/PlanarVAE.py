@@ -87,11 +87,10 @@ class PlanarVAE(nn.Module):
                                     nn.PReLU())
 
         self.tanh = nn.Tanh()
-        self.prelu = nn.PReLU()
 
         ode_blocks1 = []
         for _ in range(1):
-            ode_blocks1.append(ODEBlock(ODEfunc(128),method='dopri5',rtol=1e-5,atol=1e-5))
+            ode_blocks1.append(ODEBlock(ODEfunc(self.gru_hidden_dim_2),method='dopri5',rtol=1e-5,atol=1e-5))
         self.ode_blocks = nn.Sequential(*ode_blocks1)
 
         # Flow parameters
@@ -144,12 +143,12 @@ class PlanarVAE(nn.Module):
         kl = sum_logs - sum_ldj
 
         #decoder
-        zk_fc = self.linear(zk)
-        zk_in  = self.tanh(zk_fc)
-        output_in = self.decoder(s_inp,zk_in)
-        #output_in  = self.ode_blocks(zk_in)            #[128, 168, 128][128, 128]
+        z0_fc = self.linear(zk)
+        z0_in  = self.tanh(z0_fc)
+        s_res,hidden = self.decoder(s_inp,z0_in)
 
-        #Output layer (MLP)
+        #prediction layer (ODE + MLP)
+        output_in = self.ode_blocks(z0_in)
         pred = self.output(output_in)
         gaussian = Independent(Normal(loc=pred, scale=0.01), 1)
-        return pred,gaussian,kl
+        return pred,gaussian,kl,s_res

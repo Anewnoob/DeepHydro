@@ -37,7 +37,7 @@ class GRU_VAE(nn.Module):
                                     nn.Linear(32, self.output_out_dim),
                                     nn.PReLU())
 
-        self.prelu = nn.PReLU()
+        self.tanh = nn.Tanh()
 
         ode_blocks1 = []
         for _ in range(1):
@@ -61,16 +61,16 @@ class GRU_VAE(nn.Module):
         z0_prior = Normal(torch.Tensor([0.]).cuda(), torch.Tensor([1.]).cuda())
         kldiv_z0 = kl_divergence(z0_distr, z0_prior)
 
-        #ODE-decoder layer (ode)
+        #decoder
         z0_fc = self.linear(z0)
-        z0_in  = self.prelu(z0_fc)
-        output_in  = self.ode_blocks(z0_in)            #[128, 168, 128][128, 128]
-        #output_in = self.decoder(z0_in)
+        z0_in  = self.tanh(z0_fc)
+        s_res,hidden = self.decoder(s_inp,z0_in)
 
-        #Output layer (MLP)
+        #prediction layer (ODE + MLP)
+        output_in = self.ode_blocks(z0_in)
         pred = self.output(output_in)
 
         gaussian = Independent(Normal(loc=pred, scale=0.01), 1)
-        return pred,gaussian,kldiv_z0
+        return pred,gaussian,kldiv_z0,s_res
 
 

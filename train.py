@@ -129,35 +129,37 @@ if __name__ == '__main__':
                 optimizer.zero_grad()
                 """LSTM,Bi-GRU,Bi-GRU-ATT"""
                 if opt.model == 'LSTM' or opt.model == 'Bi_GRU' or opt.model == 'Bi_GRU_ATT':
-                    x_res = model(x_seq,flow_x)
-                    loss = loss_fn(x_res, y_batch)
+                    pred_y = model(x_seq,flow_x)
+                    loss = loss_fn(pred_y, y_batch)
 
 
                 """GRU-VAE"""
                 if opt.model == 'GRU_VAE' or opt.model == 'LatentODE':
-                    x_res, gaussian, kl_divergence = model(x_seq,flow_x)
+                    pred_y, gaussian, kl_divergence,res_x = model(x_seq,flow_x)
+                    res_loss = loss_fn(torch.cat([x_seq, flow_x], dim=2), res_x)
                     gaussian_likelihood = gaussian.log_prob(y_batch)
                     gaussian_likelihood = torch.mean(gaussian_likelihood)
                     kl_divergence = torch.mean(kl_divergence)
                     ELBO = gaussian_likelihood - beta  * kl_divergence
-                    loss = -ELBO
+                    loss =  res_loss - ELBO
                     #print('loss:',format(loss,'.5f'),'KL:',format(kl_divergence,'.8f'),beta)
 
                 """PlanarVAE, LatentODE"""
                 if opt.model == 'PlanarVAE':
-                    x_res,gaussian,kl_divergence = model(x_seq,flow_x)
+                    pred_y,gaussian,kl_divergence,res_x = model(x_seq,flow_x)
+                    res_loss = loss_fn(torch.cat([x_seq, flow_x], dim=2), res_x)
                     kl_divergence /= float(len(x_seq))
-                    mse_loss = loss_fn(x_res,y_batch)               #(128,3)  (128,3)  [:][1]
+                    mse_loss = loss_fn(pred_y,y_batch)               #(128,3)  (128,3)  [:][1]
                     gaussian_likelihood = gaussian.log_prob(y_batch)
                     gaussian_likelihood = torch.mean(gaussian_likelihood)
                     ELBO = gaussian_likelihood - beta * kl_divergence
-                    loss = -ELBO
+                    loss = res_loss-ELBO
                     #print('mse_loss:',format(mse_loss,'.5f'),'loss:',format(loss,'.5f'),'KL:',format(kl_divergence,'.8f'))
 
                 """DeepHydro"""
                 if opt.model == 'DeepHydro':
-                    pred_y,gaussian,kl_divergence,rec_x_seq = model(x_seq,flow_x,flow_y,T,TP)
-                    mse_loss = loss_fn(pred_y,y_batch)+ loss_fn(rec_x_seq,torch.cat([x_seq,flow_x], dim =2)[:,-1,:])         #(128,3)  (128,3)  [:][1]
+                    pred_y,gaussian,kl_divergence,res_x = model(x_seq,flow_x,flow_y,T,TP)
+                    mse_loss = loss_fn(pred_y,y_batch) + loss_fn(torch.cat([x_seq, flow_x], dim=2), res_x)         #(128,3)  (128,3)  [:][1]
                     gaussian_likelihood = gaussian.log_prob(y_batch)
                     loss = mse_loss - torch.mean(gaussian_likelihood,0) + beta * kl_divergence
                     #print('loss:', loss.item(),mse_loss.item(),'kl_loss:', kl_divergence.item(), beta)
@@ -175,19 +177,19 @@ if __name__ == '__main__':
     with torch.no_grad():
         for i, (x_seq, y_batch, flow_x, flow_y, T, TP) in enumerate(test_batch_generator):
             if opt.model == 'LSTM' or opt.model == 'Bi_GRU' or opt.model == 'Bi_GRU_ATT':
-                x_res = model(x_seq, flow_x)
+                pred_y = model(x_seq, flow_x)
 
             if opt.model == 'GRU_VAE' or opt.model == 'PlanarVAE' or opt.model == 'LatentODE' :
-                x_res,_,_ = model(x_seq,flow_x)
+                pred_y,_,_ = model(x_seq,flow_x)
 
             if opt.model == 'DeepHydro':
-                x_res,_,_,_ = model(x_seq,flow_x,flow_y,T,TP)
+                pred_y,_,_,_ = model(x_seq,flow_x,flow_y,T,TP)
 
-            x_res = mmn.inverse_transform(x_res.cpu().detach().numpy())
+            pred_y = mmn.inverse_transform(pred_y.cpu().detach().numpy())
             y_batch = mmn.inverse_transform(y_batch.cpu().detach().numpy())
-            total_mse += get_MSE(x_res, y_batch) * len(x_seq)
-            total_mae += get_MAE(x_res, y_batch) * len(x_seq)
-            total_mape += get_MAPE(x_res, y_batch) * len(x_seq)
+            total_mse += get_MSE(pred_y, y_batch) * len(x_seq)
+            total_mae += get_MAE(pred_y, y_batch) * len(x_seq)
+            total_mape += get_MAPE(pred_y, y_batch) * len(x_seq)
     rmse = np.sqrt(total_mse / len(test_batch_generator.dataset))
     mae = total_mae / len(test_batch_generator.dataset)
     mape = total_mape / len(test_batch_generator.dataset)

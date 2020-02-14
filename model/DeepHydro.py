@@ -4,6 +4,7 @@ from utils.helper import init_network_weights,reparameterize,split_last_dim,lins
 from torch.distributions.normal import Normal
 from torch.distributions import kl_divergence,Independent
 from utils.cnf import ODECNFfunc,CNF
+from model.encoder_decoder import *
 
 #GRUCell -- update h and z
 class GRU_unit(nn.Module):
@@ -142,10 +143,11 @@ class DeepHydro(nn.Module):
         self.flow_history = True
         self.use_time_info = use_external
         self.use_ll_info = use_external
-        self.temp_prices = False
+        self.temp_prices = use_external
         self.CNF = True
         self.batch_size = 128
         self.gru_hidden_dim_1 =128
+        self.gru_hidden_dim_2 = 128
         self.T_out_dim = 128
         self.LL_out_dim = 128
         self.tp_out_dim = 128
@@ -169,7 +171,12 @@ class DeepHydro(nn.Module):
         self.rnn = nn.GRU(self.gru_hidden_dim_1+self.z0_hidden, self.gru_hidden_dim_1, batch_first=True,
                           bidirectional=True, dropout=0.5)
 
-        #ODE used in decoder
+        #restruction decoder
+        self.res_decoder = Decoder(self.gru_input_dim, self.gru_hidden_dim_2)
+        self.linear = nn.Linear(self.z0_hidden, self.gru_hidden_dim_2)
+        self.tanh = nn.Tanh()
+
+        #extrapolation decoder
         ode_blocks1 = []
         for _ in range(self.num_ode_blocks):
             ode_blocks1.append(ODEBlock(ODEfunc(self.z0_hidden),method='dopri5',rtol=1e-5,atol=1e-5))
@@ -222,11 +229,6 @@ class DeepHydro(nn.Module):
             self.LL_ode_Y = nn.Sequential(*ode_blocks5)
 
 
-        self.reconstruct = nn.Sequential(
-            nn.Linear(self.z0_hidden, 6),
-            nn.PReLU(),
-        )
-
         # temperature and  electricity prices
         if self.temp_prices:
             self.output_in_dim += self.tp_out_dim  # 256+128
@@ -241,11 +243,6 @@ class DeepHydro(nn.Module):
             for _ in range(self.num_ode_blocks):
                 ode_blocks6.append(ODEBlock(ODEfunc(self.tp_out_dim)))
             self.temp_prices_ode = nn.Sequential(*ode_blocks6)
-
-        self.reconstruct = nn.Sequential(
-            nn.Linear(self.z0_hidden, 6),
-            nn.PReLU(),
-        )
 
         def construct_cnf():
             diffeq = ODECNFnet(self.z0_hidden)
@@ -296,7 +293,7 @@ class DeepHydro(nn.Module):
         gt = torch.cat([h4[0], h4[1]], dim=1)
 
         #extrapolation decoder
-        zt  = self.decoder(z_hidden)            #[128, 168, 128][128, 128]
+        zt  = self.decoder(z_hidden)
 
         #multi-feature fusion
         con = torch.cat([gt,zt],dim=1)
@@ -325,12 +322,14 @@ class DeepHydro(nn.Module):
 
 
         #reconstruct x_(t-1)
-        rec_s_inp = self.reconstruct(z_hidden)
+        z_fc = self.linear(z_hidden)
+        z_in  = self.tanh(z_fc)
+        s_res,hidden = self.res_decoder(s_inp,z_in)
 
         #Output layer (MLP)
         pred = self.output(con)
         gaussian = Independent(Normal(loc=pred, scale=0.01), 1)
-        return pred,gaussian,kl_all,rec_s_inp,#all_mean,all_std,z0,z_hidden,#,all_z_hidden
+        return pred,gaussian,kl_all,s_res#all_mean,all_std,z0,z_hidden,#,all_z_hidden
 
 
 #zk

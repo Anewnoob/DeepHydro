@@ -3,6 +3,7 @@ from utils.helper import init_network_weights,reparameterize,linspace_vector,spl
 import numpy as np
 from torch.distributions.normal import Normal
 from torch.distributions import kl_divergence,Independent
+from model.encoder_decoder import *
 
 #This code is gatherd from  https://github.com/YuliaRubanova/latent_ode
 
@@ -23,6 +24,8 @@ class LatentODE(nn.Module):
             z0_diffeq_solver=self.ODESolver,
             n_gru_units=n_gru_units,
             device=device).to(device)
+
+        self.decoder = Decoder(6, 128)
 
         self.MLP = nn.Sequential(
             nn.Linear(latent_dim, 100),
@@ -48,14 +51,14 @@ class LatentODE(nn.Module):
         z0_prior = Normal(torch.Tensor([0.]).cuda(), torch.Tensor([1.]).cuda())
         kl = kl_divergence(z0_distr, z0_prior)
 
-        #decoder
-        z_ode_out = self.ode_blocks(z)
+        s_res,hidden = self.decoder(s_inp,z)
 
-        #MLP
-        outputs = self.MLP(z_ode_out)       #(1,128,10)
+        #prediction layer (ODE + MLP)
+        output_in = self.ode_blocks(z)
+        pred = self.output(output_in)
 
-        gaussian = Independent(Normal(loc=outputs, scale=0.01), 1)
-        return outputs,gaussian,kl
+        gaussian = Independent(Normal(loc=pred, scale=0.01), 1)
+        return pred,gaussian,kl,s_res
 
 
 
@@ -226,13 +229,3 @@ class Encoder_z0_ODE_RNN(nn.Module):
         assert (not torch.isnan(yi_std).any())
 
         return yi, yi_std, latent_ys  # get z0
-
-class Decoder(nn.Module):
-    def __init__(self, latent_dim, input_dim):
-        super(Decoder, self).__init__()
-        decoder = nn.Sequential(nn.Linear(latent_dim, input_dim),)
-        init_network_weights(decoder)
-        self.decoder = decoder
-
-    def forward(self, data):
-        return self.decoder(data)

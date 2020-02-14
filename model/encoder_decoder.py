@@ -30,12 +30,17 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.hid_dim = hid_dim
         self.gru = nn.GRU(in_dim,hid_dim,batch_first=True,dropout=0.5)
+        self.FC = nn.Sequential(
+            nn.Linear(self.hid_dim, 64),          #(256,128)
+            nn.PReLU(),
+            nn.Linear(64, 6))           #(128,100)
     def forward(self, input, hidden):
         hidden = hidden.view([1,-1,self.hid_dim])
         #print(hidden.shape)
         output, hidden = self.gru(input, hidden)
         hidden = hidden.view([-1,self.hid_dim])
-        return hidden
+        res = self.FC(output)
+        return res,hidden
 
 class FcDecoder(nn.Module):
     def __init__(self, in_dim, out_dim=1):
